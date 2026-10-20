@@ -1,0 +1,16 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+
+# Test cache
+.pytest_cache/
+
+# Local SQLite database
+trackers/calorie/calorie.db
+trackers/calorie/*.db-journal
+
+# Environment secrets
+.env
