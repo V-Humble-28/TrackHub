@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calorie Tracker — Track Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Keania+One&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="tracker.css" />
+  </head>
+  <body>
+    <header class="site-header"><a class="brand" href="index.html">Track Hub</a><a class="home-link" href="index.html">← <span>All trackers</span></a></header>
+    <main class="page">
+      <p class="eyebrow">TODAY'S NUTRITION</p>
+      <h1>Eat with a little more clarity.</h1>
+      <p class="intro">Log meals from the Indian food dataset and keep a simple, useful view of your daily calories.</p>
+      <section class="stat-grid" aria-label="Calorie summary">
+        <article class="stat"><span>Consumed</span><strong>1,240 kcal</strong></article>
+        <article class="stat"><span>Daily target</span><strong>2,000 kcal</strong></article>
+        <article class="stat"><span>Remaining</span><strong>760 kcal</strong></article>
+      </section>
+      <section class="content-grid">
+        <section class="panel">
+          <h2>Add a meal</h2>
+          <p>Find a food and add the portion you ate.</p>
+          <form>
+            <div class="field"><label for="food">Food</label><input id="food" type="search" placeholder="Search foods, e.g. poha" /></div>
+            <div class="form-row"><div class="field"><label for="weight">Weight (g)</label><input id="weight" type="number" placeholder="150" /></div><div class="field"><label for="meal">Meal</label><select id="meal"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div></div>
+            <button class="button" type="button">Add to today</button>
+          </form>
+        </section>
+        <section class="panel">
+          <h2>Today's log</h2>
+          <p>Tuesday, March 10</p>
+          <div class="meal-list">
+            <div class="list-item"><span class="list-icon">☀</span><div><strong>Vegetable poha</strong><small>Breakfast · 180 g</small></div><span class="list-value">320 kcal</span></div>
+            <div class="list-item"><span class="list-icon">◒</span><div><strong>Rajma rice</strong><small>Lunch · 250 g</small></div><span class="list-value">580 kcal</span></div>
+            <div class="list-item"><span class="list-icon">✦</span><div><strong>Masala chai</strong><small>Snack · 180 ml</small></div><span class="list-value">140 kcal</span></div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

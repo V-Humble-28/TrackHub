@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker — Track Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Keania+One&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="tracker.css" />
+  </head>
+  <body>
+    <header class="site-header"><a class="brand" href="index.html">Track Hub</a><a class="home-link" href="index.html">← <span>All trackers</span></a></header>
+    <main class="page">
+      <p class="eyebrow">MARCH SPENDING</p>
+      <h1>Make every rupee feel visible.</h1>
+      <p class="intro">Capture everyday spending, spot your biggest categories, and settle shared bills without the spreadsheet.</p>
+      <section class="stat-grid" aria-label="Expense summary">
+        <article class="stat"><span>Spent this month</span><strong>₹8,460</strong></article>
+        <article class="stat"><span>Transactions</span><strong>18</strong></article>
+        <article class="stat"><span>To settle</span><strong>₹745</strong></article>
+      </section>
+      <section class="content-grid">
+        <section class="panel">
+          <h2>Add an expense</h2>
+          <p>Save a purchase in just a few details.</p>
+          <form>
+            <div class="field"><label for="description">What was it?</label><input id="description" type="text" placeholder="e.g. Metro card recharge" /></div>
+            <div class="form-row"><div class="field"><label for="amount">Amount</label><input id="amount" type="number" placeholder="0.00" /></div><div class="field"><label for="category">Category</label><select id="category"><option>Food</option><option>Transport</option><option>Grocery</option><option>College</option><option>Entertainment</option></select></div></div>
+            <div class="field"><label for="paid-by">Paid by</label><input id="paid-by" type="text" placeholder="Your name" /></div>
+            <button class="button" type="button">Save expense</button>
+          </form>
+        </section>
+        <section class="panel">
+          <h2>Where it went</h2>
+          <p>A simple view of this month's spending.</p>
+          <div class="category-list">
+            <div class="category"><span>Food</span><div class="meter"><i style="width: 82%"></i></div><span>₹3,280</span></div>
+            <div class="category"><span>Transport</span><div class="meter"><i style="width: 54%"></i></div><span>₹2,140</span></div>
+            <div class="category"><span>College</span><div class="meter"><i style="width: 36%"></i></div><span>₹1,460</span></div>
+            <div class="category"><span>Other</span><div class="meter"><i style="width: 21%"></i></div><span>₹880</span></div>
+          </div>
+          <div class="split-card"><h3>Dinner at Olive · ₹1,560</h3><p>You paid. Arjun owes ₹520 and Mira owes ₹520.</p></div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
