@@ -8,13 +8,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Keania+One&display=swap" rel="stylesheet" />
     <style>
+      :root {
+        --pastel-orange: #d97757;
+        --cream-orange: #ffe2c4;
+        --navy: #102a43;
+      }
+
       * {
         box-sizing: border-box;
       }
 
       body {
         margin: 0;
-        background: #ffffff;
+        min-height: 100vh;
+        background: var(--cream-orange);
         font-family: Arial, sans-serif;
       }
 
@@ -23,23 +30,101 @@
         display: flex;
         align-items: center;
         padding-left: 36px;
-        background: #1f2937;
+        background: var(--pastel-orange);
       }
 
       .top-menu__brand {
-        color: #ffffff;
+        color: var(--navy);
         font-family: "Keania One", Arial, sans-serif;
-        font-size: 5rem;
+        font-size: clamp(1.75rem, 6vw, 6rem);
         font-weight: 400;
+        -webkit-text-stroke: 1px var(--navy);
         line-height: 1;
         letter-spacing: 0.01em;
         text-decoration: none;
+        display: inline-block;
+        white-space: nowrap;
       }
     </style>
   </head>
   <body>
     <header class="top-menu">
-      <a class="top-menu__brand" href="/">Track Hub</a>
+      <a class="top-menu__brand" href="/" aria-label="Track Hub"></a>
     </header>
+    <script>
+      const brand = document.querySelector(".top-menu__brand");
+      const titles = [
+        { text: "Track Hub", language: "en" },
+        { text: "追踪中心", language: "zh" },
+        { text: "ट्रैक हब", language: "hi" },
+        { text: "Centro de seguimiento", language: "es" },
+        { text: "Centre de suivi", language: "fr" },
+        { text: "مركز التتبع", language: "ar" },
+        { text: "ট্র্যাকিং হাব", language: "bn" },
+        { text: "Centro de rastreamento", language: "pt" },
+        { text: "Центр отслеживания", language: "ru" },
+        { text: "ٹریکنگ حب", language: "ur" },
+        { text: "Pusat pelacakan", language: "id" },
+        { text: "Tracking-Zentrale", language: "de" },
+        { text: "追跡ハブ", language: "ja" },
+        { text: "ਟ੍ਰੈਕਿੰਗ ਹੱਬ", language: "pa" },
+        { text: "ट्रॅकिंग हब", language: "mr" },
+        { text: "ట్రాకింగ్ హబ్", language: "te" },
+        { text: "Takip merkezi", language: "tr" },
+        { text: "கண்காணிப்பு மையம்", language: "ta" },
+        { text: "Trung tâm theo dõi", language: "vi" },
+        { text: "추적 허브", language: "ko" },
+      ];
+      const typingDuration = 1000;
+      const readingDuration = 1400;
+      const deletingDuration = 600;
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        brand.textContent = titles[0].text;
+      } else {
+        let titleIndex = 0;
+
+        const animateTitle = () => {
+          const title = titles[titleIndex];
+          const characters = window.Intl?.Segmenter
+            ? [...new Intl.Segmenter(title.language, { granularity: "grapheme" }).segment(title.text)].map(({ segment }) => segment)
+            : Array.from(title.text);
+          const typingDelay = typingDuration / characters.length;
+          const deletingDelay = deletingDuration / characters.length;
+          let characterIndex = 0;
+
+          brand.textContent = "";
+          brand.lang = title.language;
+          brand.setAttribute("aria-label", title.text);
+
+          const typeNextCharacter = () => {
+            brand.textContent += characters[characterIndex];
+            characterIndex += 1;
+
+            if (characterIndex < characters.length) {
+              window.setTimeout(typeNextCharacter, typingDelay);
+            } else {
+              window.setTimeout(deleteCharacter, readingDuration);
+            }
+          };
+
+          const deleteCharacter = () => {
+            characters.pop();
+            brand.textContent = characters.join("");
+
+            if (characters.length > 0) {
+              window.setTimeout(deleteCharacter, deletingDelay);
+            } else {
+              titleIndex = (titleIndex + 1) % titles.length;
+              window.setTimeout(animateTitle, 180);
+            }
+          };
+
+          window.setTimeout(typeNextCharacter, typingDelay);
+        };
+
+        animateTitle();
+      }
+    </script>
   </body>
 </html>
