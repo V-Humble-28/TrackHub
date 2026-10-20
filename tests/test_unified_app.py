@@ -13,6 +13,8 @@ def test_home_page(client):
     response = client.get("/")
     assert response.status_code == 200
     assert b"TrackHub" in response.data or b"Track Hub" in response.data
+    assert b'href="habit.html"' in response.data
+    assert b'href="study.html"' in response.data
 
 
 def test_tracker_pages(client):
@@ -23,6 +25,20 @@ def test_tracker_pages(client):
     res_exp = client.get("/expense")
     assert res_exp.status_code == 200
     assert b"Expense Tracker" in res_exp.data
+
+    res_hab = client.get("/habit")
+    assert res_hab.status_code == 200
+    assert b"Habit Tracker" in res_hab.data
+
+    res_stu = client.get("/study")
+    assert res_stu.status_code == 200
+    assert b"Study Tracker" in res_stu.data
+
+
+def test_static_assets(client):
+    for asset in ["habit.html", "study.html", "habit.js", "study.js", "tracker.css"]:
+        res = client.get(f"/{asset}")
+        assert res.status_code == 200
 
 
 def test_mounted_api_endpoints(client):
