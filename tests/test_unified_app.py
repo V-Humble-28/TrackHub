@@ -37,3 +37,15 @@ def test_mounted_api_endpoints(client):
     # Expense entries endpoint mounted
     res = client.get("/api/expense/entries")
     assert res.status_code == 200
+
+    # Habit health & dashboard mounted
+    res_habit_health = client.get("/api/habit/health")
+    assert res_habit_health.status_code == 200
+    res_habit_dash = client.get("/api/habit/dashboard")
+    assert res_habit_dash.status_code == 200
+
+    # Study health & dashboard mounted
+    res_study_health = client.get("/api/study/health")
+    assert res_study_health.status_code == 200
+    res_study_dash = client.get("/api/study/dashboard")
+    assert res_study_dash.status_code == 200

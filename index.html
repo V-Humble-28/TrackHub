@@ -55,9 +55,10 @@
         grid-template-columns: repeat(2, minmax(0, 440px));
         justify-content: center;
         align-items: center;
-        gap: 112px;
+        gap: 40px;
         width: min(992px, calc(100% - 72px));
         margin: 0 auto;
+        padding: 48px 0;
       }
 
       .glass-panel {
@@ -167,6 +168,22 @@
         <h2>Expense<br />Tracker</h2>
         <p>Keep spending clear, organize expenses, and split bills with ease.</p>
         <a class="tracker-card__link" href="expense.html" aria-label="Open Expense Tracker">→</a>
+      </article>
+      <article class="glass-panel tracker-card">
+        <div class="tracker-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M12 24l8 8 16-16"/><circle cx="24" cy="24" r="20"/></svg>
+        </div>
+        <h2>Habit<br />Tracker</h2>
+        <p>Build lasting daily routines, track completions, and maintain streaks.</p>
+        <a class="tracker-card__link" href="/api/habit/dashboard" aria-label="Open Habit Tracker">→</a>
+      </article>
+      <article class="glass-panel tracker-card">
+        <div class="tracker-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M6 38V12a4 4 0 0 1 4-4h14v30H10a4 4 0 0 0-4 4zm18 0V8h14a4 4 0 0 1 4 4v26a4 4 0 0 1-4-4H24z"/></svg>
+        </div>
+        <h2>Study<br />Tracker</h2>
+        <p>Log focused study sessions, manage subjects, and hit daily goals.</p>
+        <a class="tracker-card__link" href="/api/study/dashboard" aria-label="Open Study Tracker">→</a>
       </article>
     </main>
     <script>

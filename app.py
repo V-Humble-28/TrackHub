@@ -6,6 +6,8 @@ from flask import Flask, abort, send_from_directory
 
 from trackers.calorie.app import app as calorie_app
 from trackers.expense.app import app as expense_app
+from trackers.habit.app import app as habit_app
+from trackers.study.app import app as study_app
 
 BASE_DIR = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -28,11 +30,15 @@ def register_tracker_routes(source_app, namespace):
 
 register_tracker_routes(calorie_app, "calorie")
 register_tracker_routes(expense_app, "expense")
+register_tracker_routes(habit_app, "habit")
+register_tracker_routes(study_app, "study")
 
 ASSETS = {
     "index.html",
     "calorie.html",
     "expense.html",
+    "habit.html",
+    "study.html",
     "tracker.css",
     "title-animation.js",
     "calorie.js",
@@ -71,6 +77,16 @@ def calorie_page():
 @app.get("/expense")
 def expense_page():
     return send_from_directory(BASE_DIR, "expense.html")
+
+
+@app.get("/habit")
+def habit_page():
+    return send_from_directory(BASE_DIR, "habit.html")
+
+
+@app.get("/study")
+def study_page():
+    return send_from_directory(BASE_DIR, "study.html")
 
 
 @app.get("/<path:asset>")
