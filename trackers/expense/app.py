@@ -63,7 +63,7 @@ def add_expense():
     data = request.get_json(silent=True) or {}
 
     description = str(data.get("description", "")).strip()
-    paid_by = str(data.get("paid_by", "")).strip()
+    paid_by = str(data.get("paid_by", "")).strip() or "You"
     category = str(data.get("category", "")).strip().lower()
 
     try:
@@ -71,8 +71,8 @@ def add_expense():
     except (TypeError, ValueError):
         return jsonify({"error": "Amount must be a number"}), 400
 
-    if not description or not paid_by:
-        return jsonify({"error": "Description and paid_by are required"}), 400
+    if not description:
+        return jsonify({"error": "Description is required"}), 400
     if amount <= 0:
         return jsonify({"error": "Amount must be greater than zero"}), 400
     if category not in CATEGORIES:
@@ -174,7 +174,9 @@ def create_split():
     participants = list(dict.fromkeys(
         str(person).strip() for person in participants if str(person).strip()
     ))
-    if not participants or paid_by not in participants:
+    if paid_by and paid_by not in participants:
+        participants.insert(0, paid_by)
+    if not participants:
         return jsonify({"error": "paid_by must be one of the participants"}), 400
 
     shares = {person: 0 for person in participants}
@@ -247,6 +249,48 @@ def create_split():
     }), 201
 
 
+@app.get("/api/expense/splits")
+def list_splits():
+    with connect() as con:
+        bills = con.execute(
+            "SELECT * FROM bills ORDER BY bill_date DESC, id DESC"
+        ).fetchall()
+
+        bill_list = []
+        total_to_settle = 0.0
+
+        for b in bills:
+            shares_rows = con.execute(
+                "SELECT person, amount FROM bill_shares WHERE bill_id = ?",
+                (b["id"],)
+            ).fetchall()
+            shares = {row["person"]: row["amount"] for row in shares_rows}
+            settlement = [
+                {"person": person, "owes": amount, "to": b["paid_by"]}
+                for person, amount in shares.items()
+                if person != b["paid_by"] and amount > 0
+            ]
+            bill_settle_sum = sum(s["owes"] for s in settlement)
+            total_to_settle += bill_settle_sum
+
+            bill_list.append({
+                "id": b["id"],
+                "title": b["title"],
+                "total": b["total"],
+                "paid_by": b["paid_by"],
+                "mode": b["mode"],
+                "bill_date": b["bill_date"],
+                "shares": shares,
+                "settlement": settlement,
+                "settle_total": round(bill_settle_sum, 2),
+            })
+
+    return jsonify({
+        "bills": bill_list,
+        "total_to_settle": round(total_to_settle, 2),
+    })
+
+
 @app.get("/api/expense/splits/<int:bill_id>")
 def get_split(bill_id):
     with connect() as con:
@@ -265,6 +309,16 @@ def get_split(bill_id):
         "bill": dict(bill),
         "shares": [dict(row) for row in rows]
     })
+
+
+@app.delete("/api/expense/splits/<int:bill_id>")
+def delete_split(bill_id):
+    with connect() as con:
+        con.execute("DELETE FROM bill_shares WHERE bill_id = ?", (bill_id,))
+        cur = con.execute("DELETE FROM bills WHERE id = ?", (bill_id,))
+    if cur.rowcount == 0:
+        return jsonify({"error": "Bill not found"}), 404
+    return jsonify({"message": "Bill deleted", "id": bill_id})
 
 
 create_tables()
