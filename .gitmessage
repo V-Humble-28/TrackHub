@@ -1,0 +1,13 @@
+# <type>(<scope>): <short summary (max 72 chars)>
+#
+# Remember the 4-step atomic commit cadence:
+# 1. feat(<module>): database schema and models
+# 2. feat(<module>): core logic and API endpoints
+# 3. test(<module>): automated unit and integration tests
+# 4. feat(ui): frontend interface, styles, and asset wiring
+#
+# Allowed types: feat, fix, test, docs, refactor, chore, ci
+# Allowed scopes: calorie, expense, habit, study, ui, gateway, devops
+#
+# Detailed description (explain what and why, not how):
+
