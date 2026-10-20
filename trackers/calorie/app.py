@@ -133,12 +133,25 @@ def add_food():
             return jsonify({"error": "Food has invalid nutrition data"}), 500
 
     else:
-        # Backward compatibility with the previous API format.
+        # Backward compatibility or manual food entry.
         food_name = str(data.get("food_name", "")).strip()
-        try:
-            calories_per_100g = float(data.get("calories_per_100g", -1))
-        except (ValueError, TypeError):
-            return jsonify({"error": "Calories must be a number"}), 400
+        calories_per_100g = -1.0
+        # If food_name matches a dataset food, auto-populate calories
+        for f in load_foods():
+            if f["name"].casefold() == food_name.casefold() or f["name_hindi"].casefold() == food_name.casefold():
+                food = f
+                food_id = int(f["id"])
+                food_name = f["name"]
+                try:
+                    calories_per_100g = float(f["energy_kcal"])
+                except (ValueError, TypeError):
+                    calories_per_100g = -1.0
+                break
+        if calories_per_100g < 0:
+            try:
+                calories_per_100g = float(data.get("calories_per_100g", -1))
+            except (ValueError, TypeError):
+                return jsonify({"error": "Calories must be a number"}), 400
 
     meal = str(data.get("meal", "")).strip().lower()
 
@@ -156,7 +169,9 @@ def add_food():
     if meal not in VALID_MEALS:
         return jsonify({"error": "Meal must be breakfast, lunch, dinner, or snack"}), 400
 
-    entry_date = date.today().isoformat()
+    entry_date = str(data.get("date") or date.today().isoformat())
+    if not valid_date(entry_date):
+        return jsonify({"error": "Date must be YYYY-MM-DD"}), 400
     calories = calculate_calories(weight, calories_per_100g)
 
     with get_connection() as connection:
