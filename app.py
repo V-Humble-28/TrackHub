@@ -43,6 +43,8 @@ ASSETS = {
     "title-animation.js",
     "calorie.js",
     "expense.js",
+    "habit.js",
+    "study.js",
 }
 
 
