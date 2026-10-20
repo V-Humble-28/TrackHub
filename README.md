@@ -1,5 +1,4 @@
 
-=======
 # Tracker Hub 🚀
 
 **Tracker Hub** is a Python-based project that brings multiple personal tracking tools together in one place. It is being developed module by module as part of a DevOps viva project.
