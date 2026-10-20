@@ -13,8 +13,10 @@ def test_home_page(client):
     response = client.get("/")
     assert response.status_code == 200
     assert b"TrackHub" in response.data or b"Track Hub" in response.data
-    assert b'href="habit.html"' in response.data
-    assert b'href="study.html"' in response.data
+    assert b'href="trackers/calorie/calorie.html"' in response.data
+    assert b'href="trackers/expense/expense.html"' in response.data
+    assert b'href="trackers/habit/habit.html"' in response.data
+    assert b'href="trackers/study/study.html"' in response.data
 
 
 def test_tracker_pages(client):
@@ -36,9 +38,26 @@ def test_tracker_pages(client):
 
 
 def test_static_assets(client):
-    for asset in ["habit.html", "study.html", "habit.js", "study.js", "tracker.css"]:
+    # Test nested paths and top-level fallback aliases
+    assets = [
+        "tracker.css",
+        "title-animation.js",
+        "trackers/calorie/calorie.html",
+        "trackers/calorie/calorie.js",
+        "trackers/expense/expense.html",
+        "trackers/expense/expense.js",
+        "trackers/habit/habit.html",
+        "trackers/habit/habit.js",
+        "trackers/study/study.html",
+        "trackers/study/study.js",
+        "habit.html",
+        "study.html",
+        "habit.js",
+        "study.js",
+    ]
+    for asset in assets:
         res = client.get(f"/{asset}")
-        assert res.status_code == 200
+        assert res.status_code == 200, f"Asset failed: {asset}"
 
 
 def test_mounted_api_endpoints(client):

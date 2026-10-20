@@ -33,19 +33,7 @@ register_tracker_routes(expense_app, "expense")
 register_tracker_routes(habit_app, "habit")
 register_tracker_routes(study_app, "study")
 
-ASSETS = {
-    "index.html",
-    "calorie.html",
-    "expense.html",
-    "habit.html",
-    "study.html",
-    "tracker.css",
-    "title-animation.js",
-    "calorie.js",
-    "expense.js",
-    "habit.js",
-    "study.js",
-}
+TRACKER_NAMES = ("calorie", "expense", "habit", "study")
 
 
 @app.after_request
@@ -73,29 +61,38 @@ def home():
 
 @app.get("/calorie")
 def calorie_page():
-    return send_from_directory(BASE_DIR, "calorie.html")
+    return send_from_directory(BASE_DIR / "trackers" / "calorie", "calorie.html")
 
 
 @app.get("/expense")
 def expense_page():
-    return send_from_directory(BASE_DIR, "expense.html")
+    return send_from_directory(BASE_DIR / "trackers" / "expense", "expense.html")
 
 
 @app.get("/habit")
 def habit_page():
-    return send_from_directory(BASE_DIR, "habit.html")
+    return send_from_directory(BASE_DIR / "trackers" / "habit", "habit.html")
 
 
 @app.get("/study")
 def study_page():
-    return send_from_directory(BASE_DIR, "study.html")
+    return send_from_directory(BASE_DIR / "trackers" / "study", "study.html")
 
 
 @app.get("/<path:asset>")
 def frontend_asset(asset):
-    if asset not in ASSETS:
-        abort(404)
-    return send_from_directory(BASE_DIR, asset)
+    # Direct path under repository root (e.g. trackers/calorie/calorie.html, tracker.css)
+    target = (BASE_DIR / asset).resolve()
+    if target.is_file() and target.is_relative_to(BASE_DIR):
+        return send_from_directory(target.parent, target.name)
+
+    # Top-level fallback alias (e.g. /calorie.html or /calorie.js)
+    for tracker in TRACKER_NAMES:
+        alias_target = (BASE_DIR / "trackers" / tracker / asset).resolve()
+        if alias_target.is_file() and alias_target.is_relative_to(BASE_DIR):
+            return send_from_directory(alias_target.parent, alias_target.name)
+
+    abort(404)
 
 
 if __name__ == "__main__":
