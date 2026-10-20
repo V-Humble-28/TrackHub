@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Tracker — Track Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Keania+One&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../tracker.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../../index.html" data-animated-brand aria-label="Track Hub"></a>
+      <a class="home-link" href="../../index.html">← <span>All trackers</span></a>
+    </header>
+    <main class="page">
+      <p class="eyebrow">STUDY & FOCUS</p>
+      <h1>Turn deep focus into a daily rhythm.</h1>
+      <p class="intro">Log dedicated study sessions, balance your subjects, and hit your daily focus targets.</p>
+      
+      <section class="stat-grid" aria-label="Study summary">
+        <article class="stat"><span>Today's focus</span><strong id="stat-today-minutes">0m</strong></article>
+        <article class="stat"><span>Daily goal</span><strong id="stat-daily-goal">120m</strong></article>
+        <article class="stat"><span>Goal progress</span><strong id="stat-goal-percent">0%</strong></article>
+      </section>
+
+      <section class="content-grid">
+        <section class="panel">
+          <h2>Log a study session</h2>
+          <p>Record focused time spent on your subjects.</p>
+          <form id="session-form">
+            <div class="field">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <label for="session-subject">Subject</label>
+                <button type="button" id="toggle-new-subject" class="action-link">+ New subject</button>
+              </div>
+              <select id="session-subject" required>
+                <option value="" disabled selected>Select a subject…</option>
+              </select>
+            </div>
+
+            <!-- Inline new subject creator -->
+            <div id="new-subject-box" style="display: none; padding: 12px; background: rgba(255,255,255,0.35); border-radius: 12px; border: 1px solid var(--line); margin-bottom: 14px;">
+              <div class="form-row">
+                <div class="field">
+                  <label for="new-subject-name">Subject name</label>
+                  <input id="new-subject-name" type="text" placeholder="e.g. Distributed Systems" />
+                </div>
+                <div class="field">
+                  <label for="new-subject-color">Accent color</label>
+                  <input id="new-subject-color" type="color" value="#d97757" style="padding: 2px; height: 44px; cursor: pointer;" />
+                </div>
+              </div>
+              <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button type="button" id="cancel-subject-btn" class="button" style="width: auto; background: transparent; color: var(--navy); border: 1px solid var(--line);">Cancel</button>
+                <button type="button" id="save-subject-btn" class="button" style="width: auto;">Add Subject</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="session-duration">Duration (minutes)</label>
+                <input id="session-duration" type="number" min="1" max="1440" required placeholder="e.g. 45" />
+              </div>
+              <div class="field">
+                <label for="session-date">Date</label>
+                <input id="session-date" type="date" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="session-notes">Topic / Notes (optional)</label>
+              <input id="session-notes" type="text" placeholder="e.g. Worked through Chapter 3 problems" />
+            </div>
+
+            <button class="button" type="submit">Log session</button>
+            <p class="status" id="session-status" aria-live="polite"></p>
+          </form>
+
+          <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line);">
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+              <h3 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--navy);">Daily Goal Target</h3>
+              <button type="button" id="edit-goal-btn" class="action-link">Change</button>
+            </div>
+            <form id="goal-form" style="display: none; margin-top: 10px; display: none;">
+              <div class="form-row" style="grid-template-columns: 1fr auto;">
+                <div class="field" style="margin: 0;">
+                  <input id="goal-input" type="number" min="1" max="1440" placeholder="Minutes per day" />
+                </div>
+                <button class="button" type="submit" style="width: auto; padding: 0 16px;">Save</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Subject breakdown</h2>
+          <p>Time invested across subjects over the last 7 days.</p>
+          <div class="category-list" id="subject-breakdown"></div>
+
+          <h3 style="margin: 28px 0 10px; font-size: 0.95rem; font-weight: 700; color: var(--navy);">Recent Sessions</h3>
+          <div class="meal-list" id="session-list"></div>
+        </section>
+      </section>
+
+      <section class="panel split-panel" id="tasks-panel">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+          <h2>Upcoming Tasks & Exams</h2>
+          <span class="badge" id="task-count-badge">0 tasks</span>
+        </div>
+        <p>Keep track of assignments, deadlines, and upcoming exams.</p>
+        
+        <form id="task-form">
+          <div class="form-row">
+            <div class="field">
+              <label for="task-title">Title</label>
+              <input id="task-title" required placeholder="e.g. Midterm exam or Lab 3 submission" />
+            </div>
+            <div class="field">
+              <label for="task-type">Type</label>
+              <select id="task-type" required>
+                <option value="assignment">Assignment</option>
+                <option value="exam">Exam</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="task-subject">Subject (optional)</label>
+              <select id="task-subject">
+                <option value="">General / None</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="task-due-date">Due date</label>
+              <input id="task-due-date" type="date" required />
+            </div>
+          </div>
+          <button class="button" type="submit">Add deadline</button>
+          <p class="status" id="task-status" aria-live="polite"></p>
+        </form>
+
+        <div class="meal-list" id="task-list" style="margin-top: 18px;"></div>
+      </section>
+    </main>
+    <script src="../../title-animation.js"></script>
+    <script src="study.js"></script>
+  </body>
+</html>
