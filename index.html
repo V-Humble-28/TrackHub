@@ -21,7 +21,10 @@
       body {
         margin: 0;
         min-height: 100vh;
-        background: var(--cream-orange);
+        background:
+          radial-gradient(circle at 15% 80%, #ffd1a5 0, transparent 32%),
+          radial-gradient(circle at 82% 18%, #ffe9d2 0, transparent 28%),
+          var(--cream-orange);
         font-family: Arial, sans-serif;
       }
 
@@ -45,12 +48,51 @@
         display: inline-block;
         white-space: nowrap;
       }
+
+      .glass-panels {
+        min-height: calc(100vh - 120px);
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 440px));
+        justify-content: center;
+        align-items: center;
+        gap: 112px;
+        width: min(992px, calc(100% - 72px));
+        margin: 0 auto;
+      }
+
+      .glass-panel {
+        aspect-ratio: 4 / 5;
+        border: 1px solid rgba(255, 232, 205, 0.52);
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(187, 82, 29, 0.52), rgba(126, 48, 17, 0.34));
+        box-shadow:
+          inset 0 1px 0 rgba(255, 244, 228, 0.3),
+          0 22px 50px rgba(101, 43, 16, 0.24);
+        backdrop-filter: blur(28px) saturate(145%);
+        -webkit-backdrop-filter: blur(28px) saturate(145%);
+      }
+
+      @media (max-width: 700px) {
+        .glass-panels {
+          grid-template-columns: 1fr;
+          width: min(100% - 36px, 520px);
+          padding: 36px 0;
+        }
+
+        .glass-panel {
+          width: 100%;
+        }
+      }
     </style>
   </head>
   <body>
     <header class="top-menu">
       <a class="top-menu__brand" href="/" aria-label="Track Hub"></a>
     </header>
+    <main class="glass-panels">
+      <section class="glass-panel" aria-label="Track Hub panel one"></section>
+      <section class="glass-panel" aria-label="Track Hub panel two"></section>
+    </main>
     <script>
       const brand = document.querySelector(".top-menu__brand");
       const titles = [
@@ -82,10 +124,14 @@
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         brand.textContent = titles[0].text;
       } else {
-        let titleIndex = 0;
+        const englishTitle = titles[0];
+        const localizedTitles = titles.slice(1);
+        let localizedIndex = 0;
+        let titlesSinceEnglish = 2;
 
         const animateTitle = () => {
-          const title = titles[titleIndex];
+          const isEnglishTurn = titlesSinceEnglish === 2;
+          const title = isEnglishTurn ? englishTitle : localizedTitles[localizedIndex];
           const characters = window.Intl?.Segmenter
             ? [...new Intl.Segmenter(title.language, { granularity: "grapheme" }).segment(title.text)].map(({ segment }) => segment)
             : Array.from(title.text);
@@ -115,7 +161,13 @@
             if (characters.length > 0) {
               window.setTimeout(deleteCharacter, deletingDelay);
             } else {
-              titleIndex = (titleIndex + 1) % titles.length;
+              if (isEnglishTurn) {
+                titlesSinceEnglish = 0;
+              } else {
+                localizedIndex = (localizedIndex + 1) % localizedTitles.length;
+                titlesSinceEnglish += 1;
+              }
+
               window.setTimeout(animateTitle, 180);
             }
           };
