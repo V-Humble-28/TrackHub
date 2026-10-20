@@ -75,24 +75,38 @@ Replace `<your-github-repository-url>` with your actual GitHub repository URL.
 
 The application and its run instructions will be added as the tracker modules become functional.
 
-## 🌿 Git Workflow
+## 🌿 Git Workflow & DevOps Standards
 
-The project follows a feature-branch workflow:
+The project follows a strict **Feature-Branch Workflow** and **Atomic Commit Cadence** (see [CONTRIBUTING.md](CONTRIBUTING.md) for full engineering guidelines):
 
-1. Create a feature branch.
-2. Develop one feature at a time.
-3. Test the changes.
-4. Commit the changes with a meaningful message.
-5. Push the branch to GitHub.
-6. Merge the completed feature into `main`.
+### 1. Branch Naming Taxonomy
+* **Features**: `feature/<tracker-name>` (e.g. `feature/expense-tracker`)
+* **Bug Fixes**: `fix/<tracker-or-bug>` (e.g. `fix/split-rounding`)
+* **DevOps / CI**: `ci/<task>` (e.g. `ci/github-actions-tests`)
+* **Documentation**: `docs/<description>`
+
+### 2. Atomic Commit Cadence (4-Step Rule)
+Each module is committed in small, reviewable increments following Conventional Commits:
+1. `feat(<module>): add database schema and SQLite models`
+2. `feat(<module>): implement core business logic and API endpoints`
+3. `test(<module>): add automated unit and edge-case tests`
+4. `feat(ui): connect frontend interface and styles`
 
 Example:
 
 ```bash
-git switch -c feature/calorie-tracker
-git add .
-git commit -m "feat: add calorie tracker models"
-git push -u origin feature/calorie-tracker
+git switch -c feature/expense-tracker
+# Step 1: Implement schema & endpoints
+git add trackers/expense/app.py
+git commit -m "feat(expense): add persistent split bill and default payer endpoints"
+
+# Step 2: Add test suite
+git add tests/test_expense.py
+git commit -m "test(expense): add automated test suite for expenses and bill splits"
+
+# Step 3: Implement UI integration
+git add expense.html expense.js tracker.css
+git commit -m "feat(ui): add persistent expense tracking and bill splitting interface"
 ```
 
 ## 🧪 Testing
