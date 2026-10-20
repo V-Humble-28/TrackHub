@@ -15,3 +15,4 @@ trackers/calorie/*.db-journal
 # Environment secrets
 .env
 trackers/expense/expenses.db
+trackers/study/study.db
