@@ -16,3 +16,4 @@ trackers/calorie/*.db-journal
 .env
 trackers/expense/expenses.db
 trackers/study/study.db
+trackers/habit/habit.db
