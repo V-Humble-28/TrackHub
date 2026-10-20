@@ -1,19 +1,14 @@
-# Python cache
+# Python artifacts
 __pycache__/
 *.py[cod]
 
 # Virtual environment
 .venv/
 
-# Test cache
+# Testing
 .pytest_cache/
 
-# Local SQLite database
-trackers/calorie/calorie.db
-trackers/calorie/*.db-journal
-
-# Environment secrets
+# Databases and secrets
+*.db
+*.db-journal
 .env
-trackers/expense/expenses.db
-trackers/study/study.db
-trackers/habit/habit.db
