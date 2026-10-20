@@ -10,39 +10,50 @@
     <link rel="stylesheet" href="tracker.css" />
   </head>
   <body>
-    <header class="site-header"><a class="brand" href="index.html">Track Hub</a><a class="home-link" href="index.html">← <span>All trackers</span></a></header>
+    <header class="site-header"><a class="brand" href="index.html" data-animated-brand aria-label="Track Hub"></a><a class="home-link" href="index.html">← <span>All trackers</span></a></header>
     <main class="page">
-      <p class="eyebrow">MARCH SPENDING</p>
+      <p class="eyebrow" id="month-eyebrow">SPENDING SUMMARY</p>
       <h1>Make every rupee feel visible.</h1>
       <p class="intro">Capture everyday spending, spot your biggest categories, and settle shared bills without the spreadsheet.</p>
       <section class="stat-grid" aria-label="Expense summary">
-        <article class="stat"><span>Spent this month</span><strong>₹8,460</strong></article>
-        <article class="stat"><span>Transactions</span><strong>18</strong></article>
-        <article class="stat"><span>To settle</span><strong>₹745</strong></article>
+        <article class="stat"><span>Spent this month</span><strong id="month-total">₹0</strong></article>
+        <article class="stat"><span>Transactions</span><strong id="transaction-count">0</strong></article>
+        <article class="stat"><span>To settle</span><strong id="settlement-total">₹0</strong></article>
       </section>
       <section class="content-grid">
         <section class="panel">
           <h2>Add an expense</h2>
           <p>Save a purchase in just a few details.</p>
-          <form>
-            <div class="field"><label for="description">What was it?</label><input id="description" type="text" placeholder="e.g. Metro card recharge" /></div>
-            <div class="form-row"><div class="field"><label for="amount">Amount</label><input id="amount" type="number" placeholder="0.00" /></div><div class="field"><label for="category">Category</label><select id="category"><option>Food</option><option>Transport</option><option>Grocery</option><option>College</option><option>Entertainment</option></select></div></div>
-            <div class="field"><label for="paid-by">Paid by</label><input id="paid-by" type="text" placeholder="Your name" /></div>
-            <button class="button" type="button">Save expense</button>
+          <form id="expense-form">
+            <div class="field"><label for="description">What was it?</label><input id="description" type="text" required placeholder="e.g. Metro card recharge" /></div>
+            <div class="form-row"><div class="field"><label for="amount">Amount (₹)</label><input id="amount" type="number" step="0.01" min="0.01" required placeholder="0.00" /></div><div class="field"><label for="category">Category</label><select id="category"><option>Food</option><option>Transport</option><option>Grocery</option><option>College</option><option>Entertainment</option><option>Subscriptions</option><option>Other</option></select></div></div>
+            <div class="form-row"><div class="field"><label for="paid-by">Paid by</label><input id="paid-by" type="text" placeholder="Defaults to You" /></div><div class="field"><label for="expense-date">Date</label><input id="expense-date" type="date" /></div></div>
+            <button class="button" type="submit">Save expense</button>
+            <p class="status" id="expense-status" aria-live="polite"></p>
           </form>
         </section>
         <section class="panel">
           <h2>Where it went</h2>
           <p>A simple view of this month's spending.</p>
-          <div class="category-list">
-            <div class="category"><span>Food</span><div class="meter"><i style="width: 82%"></i></div><span>₹3,280</span></div>
-            <div class="category"><span>Transport</span><div class="meter"><i style="width: 54%"></i></div><span>₹2,140</span></div>
-            <div class="category"><span>College</span><div class="meter"><i style="width: 36%"></i></div><span>₹1,460</span></div>
-            <div class="category"><span>Other</span><div class="meter"><i style="width: 21%"></i></div><span>₹880</span></div>
-          </div>
-          <div class="split-card"><h3>Dinner at Olive · ₹1,560</h3><p>You paid. Arjun owes ₹520 and Mira owes ₹520.</p></div>
+          <div class="category-list" id="category-list"></div>
+          <h3 style="margin: 24px 0 10px; font-size: 0.95rem; font-weight: 700; color: var(--navy);">Recent Transactions</h3>
+          <div class="expense-list" id="expense-list"></div>
         </section>
       </section>
+      <section class="panel split-panel">
+        <h2>Split a bill</h2>
+        <p>Split an equal bill between everyone involved.</p>
+        <form id="split-form">
+          <div class="form-row"><div class="field"><label for="split-title">Bill name</label><input id="split-title" required placeholder="Dinner at Olive" /></div><div class="field"><label for="split-amount">Total amount (₹)</label><input id="split-amount" type="number" min="0.01" step="0.01" required placeholder="1560" /></div></div>
+          <div class="form-row"><div class="field"><label for="split-paid-by">Paid by</label><input id="split-paid-by" required placeholder="Your name" /></div><div class="field"><label for="participants">Participants (including payer)</label><input id="participants" required placeholder="You, Arjun, Mira" /></div></div>
+          <button class="button" type="submit">Create equal split</button>
+          <p class="status" id="split-status" aria-live="polite"></p>
+        </form>
+        <p class="settlement" id="settlement-result"></p>
+        <div class="split-list" id="split-list"></div>
+      </section>
     </main>
+    <script src="title-animation.js"></script>
+    <script src="expense.js"></script>
   </body>
 </html>
