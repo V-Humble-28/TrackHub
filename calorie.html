@@ -10,36 +10,39 @@
     <link rel="stylesheet" href="tracker.css" />
   </head>
   <body>
-    <header class="site-header"><a class="brand" href="index.html">Track Hub</a><a class="home-link" href="index.html">← <span>All trackers</span></a></header>
+    <header class="site-header"><a class="brand" href="index.html" data-animated-brand aria-label="Track Hub"></a><a class="home-link" href="index.html">← <span>All trackers</span></a></header>
     <main class="page">
       <p class="eyebrow">TODAY'S NUTRITION</p>
       <h1>Eat with a little more clarity.</h1>
       <p class="intro">Log meals from the Indian food dataset and keep a simple, useful view of your daily calories.</p>
       <section class="stat-grid" aria-label="Calorie summary">
-        <article class="stat"><span>Consumed</span><strong>1,240 kcal</strong></article>
+        <article class="stat"><span>Consumed</span><strong id="consumed">0 kcal</strong></article>
         <article class="stat"><span>Daily target</span><strong>2,000 kcal</strong></article>
-        <article class="stat"><span>Remaining</span><strong>760 kcal</strong></article>
+        <article class="stat"><span>Remaining</span><strong id="remaining">2,000 kcal</strong></article>
       </section>
       <section class="content-grid">
         <section class="panel">
           <h2>Add a meal</h2>
           <p>Find a food and add the portion you ate.</p>
-          <form>
-            <div class="field"><label for="food">Food</label><input id="food" type="search" placeholder="Search foods, e.g. poha" /></div>
-            <div class="form-row"><div class="field"><label for="weight">Weight (g)</label><input id="weight" type="number" placeholder="150" /></div><div class="field"><label for="meal">Meal</label><select id="meal"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div></div>
-            <button class="button" type="button">Add to today</button>
+          <form id="meal-form">
+            <div class="field"><label for="food">Food</label><input id="food" type="search" required placeholder="Search foods, e.g. poha" autocomplete="off" /></div>
+            <div class="food-results" id="food-results" aria-live="polite"></div>
+            <div class="form-row"><div class="field"><label for="weight">Weight (g)</label><input id="weight" type="number" min="1" step="1" required placeholder="150" /></div><div class="field"><label for="meal">Meal</label><select id="meal"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div></div>
+            <button class="button" type="submit">Add to today</button>
+            <p class="status" id="meal-status" aria-live="polite"></p>
           </form>
         </section>
         <section class="panel">
-          <h2>Today's log</h2>
-          <p>Tuesday, March 10</p>
-          <div class="meal-list">
-            <div class="list-item"><span class="list-icon">☀</span><div><strong>Vegetable poha</strong><small>Breakfast · 180 g</small></div><span class="list-value">320 kcal</span></div>
-            <div class="list-item"><span class="list-icon">◒</span><div><strong>Rajma rice</strong><small>Lunch · 250 g</small></div><span class="list-value">580 kcal</span></div>
-            <div class="list-item"><span class="list-icon">✦</span><div><strong>Masala chai</strong><small>Snack · 180 ml</small></div><span class="list-value">140 kcal</span></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+            <h2>Daily log</h2>
+            <input id="selected-date" type="date" aria-label="Select date" style="background: rgba(255,255,255,0.3); border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; font: inherit; font-size: 0.82rem; color: var(--navy);" />
           </div>
+          <p id="log-date">Loading meals…</p>
+          <div class="meal-list" id="meal-log"></div>
         </section>
       </section>
     </main>
+    <script src="title-animation.js"></script>
+    <script src="calorie.js?v=3"></script>
   </body>
 </html>
