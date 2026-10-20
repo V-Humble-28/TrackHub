@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Tracker — Track Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Keania+One&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="tracker.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html" data-animated-brand aria-label="Track Hub"></a>
+      <a class="home-link" href="index.html">← <span>All trackers</span></a>
+    </header>
+    <main class="page">
+      <p class="eyebrow">DAILY ROUTINES</p>
+      <h1>Build habits that stand the test of time.</h1>
+      <p class="intro">Track completions, build unbroken streaks, and make daily consistency visible.</p>
+      <section class="stat-grid" aria-label="Habit summary">
+        <article class="stat"><span>Done today</span><strong id="stat-completed">0 / 0</strong></article>
+        <article class="stat"><span>Today's rate</span><strong id="stat-percent">0%</strong></article>
+        <article class="stat"><span>Best streak</span><strong id="stat-streak">0 days</strong></article>
+      </section>
+      <section class="content-grid">
+        <section class="panel">
+          <h2>Create a habit</h2>
+          <p>Define a routine you want to stay accountable to.</p>
+          <form id="habit-form">
+            <div class="field">
+              <label for="habit-name">Habit name</label>
+              <input id="habit-name" type="text" required placeholder="e.g. 20-minute morning read" />
+            </div>
+            <div class="field">
+              <label for="habit-desc">Description (optional)</label>
+              <input id="habit-desc" type="text" placeholder="e.g. 10 pages before opening phone" />
+            </div>
+            <div class="field">
+              <label for="habit-frequency">Frequency</label>
+              <select id="habit-frequency">
+                <option value="daily">Daily (Every day)</option>
+                <option value="weekdays">Weekdays (Mon – Fri)</option>
+                <option value="weekly">Weekly (Once per week)</option>
+              </select>
+            </div>
+            <button class="button" type="submit">Add habit</button>
+            <p class="status" id="habit-status" aria-live="polite"></p>
+          </form>
+
+          <div style="margin-top: 28px;">
+            <h3 style="margin: 0 0 6px; font-size: 0.95rem; font-weight: 700; color: var(--navy);">7-Day Momentum</h3>
+            <p style="margin: 0 0 10px; color: var(--ink-soft); font-size: 0.8rem;">Completions across all habits over the last week.</p>
+            <div class="weekly-bar-grid" id="weekly-chart"></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+            <h2>Your habits</h2>
+            <span class="badge badge-success" id="today-date-badge">Today</span>
+          </div>
+          <p id="habits-subtitle">Check off habits as you complete them today.</p>
+          <div class="meal-list" id="habit-list"></div>
+        </section>
+      </section>
+    </main>
+    <script src="title-animation.js"></script>
+    <script src="habit.js"></script>
+  </body>
+</html>
