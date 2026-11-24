@@ -1,4 +1,5 @@
 
+from datetime import date
 import pytest
 from trackers.habit import app as habit_module
 
@@ -41,7 +42,7 @@ def test_complete_habit(client):
 
     response = client.post(
         f"/api/habit/habits/{habit['id']}/complete",
-        json={"date": "2026-10-21"},
+        json={"date": date.today().isoformat()},
     )
     assert response.status_code == 201
 
@@ -55,9 +56,10 @@ def test_prevent_duplicate_completion(client):
         json={"name": "Exercise"},
     ).get_json()
 
+    today = date.today().isoformat()
     url = f"/api/habit/habits/{habit['id']}/complete"
-    client.post(url, json={"date": "2026-10-21"})
-    response = client.post(url, json={"date": "2026-10-21"})
+    client.post(url, json={"date": today})
+    response = client.post(url, json={"date": today})
 
     assert response.status_code == 200
     assert "already completed" in response.get_json()["message"]
