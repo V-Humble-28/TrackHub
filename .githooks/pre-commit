@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# TrackHub Local Pre-Commit Quality Gate
+# Prevents broken code, uncommitted databases, and failing tests from entering Git.
+
+set -e
+
+echo "🔍 [Pre-Commit] Validating changes before committing..."
+
+# 1. Block SQLite runtime databases from being accidentally staged
+if git diff --cached --name-only | grep -E '\.(db|db-journal|sqlite)$' > /dev/null; then
+    echo "❌ [Pre-Commit Error] SQLite database file detected in staged files! Databases must be kept out of version control."
+    exit 1
+fi
+
+# 2. Block accidental secrets (.env)
+if git diff --cached --name-only | grep -E '^\.env' > /dev/null; then
+    echo "❌ [Pre-Commit Error] .env file detected in staged files! Secrets must not be committed."
+    exit 1
+fi
+
+# 3. Python syntax check
+echo "🐍 [Pre-Commit] Verifying Python syntax integrity..."
+python3 -m py_compile app.py trackers/*/*.py tests/*.py
+
+# 4. Automated test suite check
+echo "🧪 [Pre-Commit] Running test suite (pytest)..."
+.venv/bin/python3 -m pytest -q tests/
+
+echo "✅ [Pre-Commit] All quality gates passed! Commit proceeding."
+exit 0
