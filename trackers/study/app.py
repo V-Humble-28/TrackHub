@@ -1,8 +1,9 @@
 
-from flask import Flask, request, jsonify
-from pathlib import Path
-from datetime import date, datetime, timedelta
 import sqlite3
+from datetime import date, timedelta
+from pathlib import Path
+
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 DB = Path(__file__).resolve().parent / "study.db"

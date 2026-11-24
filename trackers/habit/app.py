@@ -1,8 +1,9 @@
 
-from flask import Flask, request, jsonify
-from pathlib import Path
-from datetime import date, timedelta
 import sqlite3
+from datetime import date, timedelta
+from pathlib import Path
+
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 DB = Path(__file__).resolve().parent / "habit.db"
@@ -295,10 +296,6 @@ def dashboard():
                 "date": day.isoformat(),
                 "completed": total
             })
-
-        today_done = con.execute("""
-            SELECT COUNT(*) FROM completions WHERE completed_date = ?
-        """, (today.isoformat(),)).fetchone()[0]
 
         stats = [
             {"id": habit["id"], "name": habit["name"],
