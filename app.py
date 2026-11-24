@@ -8,6 +8,7 @@ from trackers.calorie.app import app as calorie_app
 from trackers.expense.app import app as expense_app
 from trackers.habit.app import app as habit_app
 from trackers.study.app import app as study_app
+from trackers.presentation.app import app as presentation_app
 
 BASE_DIR = Path(__file__).resolve().parent
 app = Flask(__name__)
@@ -32,8 +33,9 @@ register_tracker_routes(calorie_app, "calorie")
 register_tracker_routes(expense_app, "expense")
 register_tracker_routes(habit_app, "habit")
 register_tracker_routes(study_app, "study")
+register_tracker_routes(presentation_app, "presentation")
 
-TRACKER_NAMES = ("calorie", "expense", "habit", "study")
+TRACKER_NAMES = ("calorie", "expense", "habit", "study", "presentation")
 
 
 @app.after_request
@@ -77,6 +79,12 @@ def habit_page():
 @app.get("/study")
 def study_page():
     return send_from_directory(BASE_DIR / "trackers" / "study", "study.html")
+
+
+@app.get("/presentation")
+@app.get("/demo")
+def presentation_page():
+    return send_from_directory(BASE_DIR / "trackers" / "presentation", "presentation.html")
 
 
 @app.get("/<path:asset>")

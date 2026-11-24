@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevOps Demo & Presentation — Track Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Keania+One&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../tracker.css" />
+    <style>
+      .probe-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 14px;
+        margin-top: 16px;
+      }
+      .probe-card {
+        padding: 16px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.35);
+        border: 1px solid var(--line);
+      }
+      .probe-card h3 {
+        margin: 0 0 6px;
+        font-size: 0.92rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .probe-card p {
+        margin: 0;
+        font-size: 0.78rem;
+        color: var(--ink-soft);
+      }
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 2px 7px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        background: rgba(46, 125, 50, 0.16);
+        color: #2e7d32;
+      }
+      .status-pill::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #2e7d32;
+      }
+      .test-results-container {
+        margin-top: 18px;
+        max-height: 380px;
+        overflow-y: auto;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.4);
+        padding: 12px;
+      }
+      .test-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 7px 10px;
+        border-bottom: 1px solid rgba(16, 42, 67, 0.08);
+        font-size: 0.82rem;
+        font-family: monospace;
+      }
+      .test-row:last-child {
+        border-bottom: 0;
+      }
+      .badge-pass {
+        background: rgba(46, 125, 50, 0.18);
+        color: #1b5e20;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 8px;
+        font-size: 0.72rem;
+      }
+      .ci-card {
+        padding: 18px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.35);
+        border: 1px solid var(--line);
+        margin-top: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../../index.html" data-animated-brand aria-label="Track Hub"></a>
+      <a class="home-link" href="../../index.html">← <span>All trackers</span></a>
+    </header>
+    <main class="page">
+      <p class="eyebrow">DEVOPS VIVA & AUTOMATION DEMO</p>
+      <h1>DevOps Command Center & Quality Gates.</h1>
+      <p class="intro">
+        Real-time microservice health probes, live automated test execution, CI/CD pipeline verification, and architecture demonstration.
+      </p>
+
+      <section class="stat-grid" aria-label="DevOps summary">
+        <article class="stat"><span>Services Health</span><strong id="stat-services">5 / 5 Online</strong></article>
+        <article class="stat"><span>Automated Tests</span><strong id="stat-tests">24 Verified</strong></article>
+        <article class="stat"><span>Active Quality Gates</span><strong id="stat-gates">CI + Pre-Commit</strong></article>
+      </section>
+
+      <!-- LIVE TEST SUITE EXECUTION (THE VIVA DEMO) -->
+      <section class="panel" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h2>⚡ Live Automated Test Suite (pytest)</h2>
+            <p style="margin: 0;">Trigger real-time Python test execution live during presentation to demonstrate automated quality assurance.</p>
+          </div>
+          <button type="button" id="run-tests-btn" class="button" style="width: auto; padding: 10px 22px; font-size: 0.92rem;">
+            Run Automated Tests
+          </button>
+        </div>
+
+        <div id="test-runner-status" style="margin-top: 16px; display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong id="test-summary-text" style="font-size: 0.92rem; color: var(--navy);">Running tests…</strong>
+            <span class="badge badge-success" id="test-duration-badge">0.00s</span>
+          </div>
+          <div class="test-results-container" id="test-results-list"></div>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <!-- MICROSERVICE HEALTH PROBES -->
+        <section class="panel">
+          <h2>Microservice Health Probes</h2>
+          <p>Real-time status and database statistics across all independent modular services.</p>
+          <div class="probe-grid" id="probes-container">
+            <p style="color: var(--ink-soft); font-size: 0.85rem;">Probing services…</p>
+          </div>
+        </section>
+
+        <!-- CI/CD & GIT HOOKS -->
+        <section class="panel">
+          <h2>CI/CD Pipelines & Git Hooks</h2>
+          <p>Automated gatekeepers preventing broken code and leaked databases from entering Git.</p>
+          <div id="ci-container">
+            <div class="ci-card">
+              <h3 style="margin: 0 0 6px; font-size: 0.95rem; color: var(--navy);">GitHub Actions: Lint Workflow</h3>
+              <p style="margin: 0; font-size: 0.8rem; color: var(--ink-soft);"><code>.github/workflows/lint.yml</code> — Executes Ruff linter on every push & PR.</p>
+            </div>
+            <div class="ci-card">
+              <h3 style="margin: 0 0 6px; font-size: 0.95rem; color: var(--navy);">GitHub Actions: Test Workflow</h3>
+              <p style="margin: 0; font-size: 0.8rem; color: var(--ink-soft);"><code>.github/workflows/test.yml</code> — Automatically runs pytest suite on Ubuntu runner.</p>
+            </div>
+            <div class="ci-card">
+              <h3 style="margin: 0 0 6px; font-size: 0.95rem; color: var(--navy);">Local Git Pre-Commit Hook</h3>
+              <p style="margin: 0; font-size: 0.8rem; color: var(--ink-soft);"><code>.githooks/pre-commit</code> — Blocks database leaks (.db), validates syntax, and runs pytest.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ARCHITECTURAL HIGHLIGHTS -->
+      <section class="panel split-panel">
+        <h2>DevOps Architecture Highlights</h2>
+        <p>Key design principles implemented across TrackHub for the DevOps examination.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 14px;">
+          <div style="padding: 16px; border-radius: 12px; background: rgba(255,255,255,0.3); border: 1px solid var(--line);">
+            <strong style="display: block; font-size: 0.9rem; margin-bottom: 6px;">1. API Gateway Pattern</strong>
+            <p style="margin: 0; font-size: 0.82rem; color: var(--ink-soft); line-height: 1.5;">
+              Centralized Flask gateway (<code style="font-size: 0.8rem;">app.py</code>) on port 5001 mounts decoupled tracker route maps, manages global CORS, and routes static assets.
+            </p>
+          </div>
+          <div style="padding: 16px; border-radius: 12px; background: rgba(255,255,255,0.3); border: 1px solid var(--line);">
+            <strong style="display: block; font-size: 0.9rem; margin-bottom: 6px;">2. Data Isolation (4 SQLite DBs)</strong>
+            <p style="margin: 0; font-size: 0.82rem; color: var(--ink-soft); line-height: 1.5;">
+              Each tracker owns its local database (<code style="font-size: 0.8rem;">calorie.db</code>, <code style="font-size: 0.8rem;">expenses.db</code>, etc.) eliminating cross-module schema locking and database contention.
+            </p>
+          </div>
+          <div style="padding: 16px; border-radius: 12px; background: rgba(255,255,255,0.3); border: 1px solid var(--line);">
+            <strong style="display: block; font-size: 0.9rem; margin-bottom: 6px;">3. GitHub Flow & Atomic Commits</strong>
+            <p style="margin: 0; font-size: 0.82rem; color: var(--ink-soft); line-height: 1.5;">
+              100% of features developed on short-lived branches and merged via Pull Requests (PRs #1 to #12) with Conventional Commits.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="../../title-animation.js"></script>
+    <script src="presentation.js"></script>
+  </body>
+</html>
