@@ -36,6 +36,10 @@ def test_tracker_pages(client):
     assert res_stu.status_code == 200
     assert b"Study Tracker" in res_stu.data
 
+    res_demo = client.get("/presentation")
+    assert res_demo.status_code == 200
+    assert b"DevOps Command Center" in res_demo.data
+
 
 def test_static_assets(client):
     # Test nested paths and top-level fallback aliases
@@ -50,6 +54,8 @@ def test_static_assets(client):
         "trackers/habit/habit.js",
         "trackers/study/study.html",
         "trackers/study/study.js",
+        "trackers/presentation/presentation.html",
+        "trackers/presentation/presentation.js",
         "habit.html",
         "study.html",
         "habit.js",
