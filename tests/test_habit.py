@@ -1,6 +1,8 @@
 
 from datetime import date
+
 import pytest
+
 from trackers.habit import app as habit_module
 
 

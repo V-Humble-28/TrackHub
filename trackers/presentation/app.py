@@ -1,9 +1,9 @@
 """DevOps Presentation & Live Demo backend for TrackHub."""
 
-from pathlib import Path
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 from flask import Flask, jsonify
 
@@ -71,6 +71,7 @@ def run_tests():
             capture_output=True,
             text=True,
             timeout=15,
+            check=False,
         )
         duration = round(time.time() - start_time, 3)
 

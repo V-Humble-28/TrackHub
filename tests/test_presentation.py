@@ -1,6 +1,7 @@
 """Unit tests for the DevOps Presentation & Live Demo Module."""
 
 import pytest
+
 from trackers.presentation.app import app
 
 

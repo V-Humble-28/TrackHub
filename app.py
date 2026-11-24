@@ -7,8 +7,8 @@ from flask import Flask, abort, send_from_directory
 from trackers.calorie.app import app as calorie_app
 from trackers.expense.app import app as expense_app
 from trackers.habit.app import app as habit_app
-from trackers.study.app import app as study_app
 from trackers.presentation.app import app as presentation_app
+from trackers.study.app import app as study_app
 
 BASE_DIR = Path(__file__).resolve().parent
 app = Flask(__name__)

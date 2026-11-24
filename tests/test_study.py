@@ -1,5 +1,6 @@
 
 import pytest
+
 from trackers.study import app as study_module
 
 
