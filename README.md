@@ -1,134 +1,207 @@
+# TrackHub 🚀
 
-# Tracker Hub 🚀
+**TrackHub** is a clean, simple, and modular personal productivity web application built with Python (Flask), SQLite, HTML, CSS, and JavaScript. It brings four everyday tracking tools together into one unified dashboard with a modern glassmorphic interface.
 
-**Tracker Hub** is a Python-based project that brings multiple personal tracking tools together in one place. It is being developed module by module as part of a DevOps viva project.
+TrackHub is designed not just as a handy productivity tool, but also as a practical implementation of real-world **DevOps principles**: clean Git branching, automated testing, continuous integration (CI) pipelines, pre-commit quality checks, and standardized commit messages.
 
-The goal is to build a collection of simple, useful trackers while learning Python programming, Git, GitHub, branching, testing, and CI/CD.
+---
 
-## 📌 Project Overview
+## 📱 The 4 Modules
 
-Tracker Hub will contain 10 different tracker modules. Each module will have its own features and will be developed incrementally.
+TrackHub is split into four independent, self-contained tracker modules:
 
-### Current Modules
+### 1. 🥗 Calorie Tracker (`trackers/calorie/`)
+- **Food Search**: Search through a built-in Indian food nutrition dataset (`foods.csv`).
+- **Smart Calorie Calculator**: Automatically calculates calories based on portion weight in grams.
+- **Meal Logs**: Save meals under Breakfast, Lunch, Dinner, or Snack.
+- **Daily Target**: See total calories eaten today compared to a 2,000 kcal target.
 
-**1. Calorie Tracker**
-- Add food items and their calorie values.
-- View recorded food entries.
-- Calculate total daily calorie intake.
-- Save and retrieve food records.
+### 2. 💰 Expense Tracker (`trackers/expense/`)
+- **Expense Logging**: Record spending with descriptions, amounts, and dates.
+- **Categories**: Automatically groups spending into Food, Transport, Grocery, College, Entertainment, Subscriptions, and Other.
+- **Equal Bill Splitting**: Split group bills equally between friends and see exact "who owes whom" settlement summaries.
 
-**2. Expense Tracker**
-- Record income and expenses.
-- Organize transactions into categories.
-- Calculate total expenses and remaining balance.
-- Save and retrieve transaction records.
+### 3. 🔥 Habit Tracker (`trackers/habit/`)
+- **Flexible Routines**: Create habits for Every Day, Weekdays (Mon–Fri), or Weekly (Once a week).
+- **One-Click Check-In**: Check off habits as you finish them for the day.
+- **Streak Engine**: Tracks your current streak and longest streak, smartly skipping days you were not expected to do the habit.
+- **7-Day Progress Bar**: Visual bar chart showing daily consistency over the last week.
 
-### Planned Modules
+### 4. 📖 Study Tracker (`trackers/study/`)
+- **Focus Time Journal**: Log study sessions in minutes by subject with custom color tags.
+- **Daily Goal Meter**: Set a daily study goal (e.g. 120 minutes) and watch your progress bar fill up.
+- **Subject Breakdown**: See which subjects you spent the most time on over the past 7 days.
+- **Task & Exam Deadlines**: Track upcoming assignments and tests with clear due dates and completion checkboxes.
 
-The remaining modules will be selected and implemented as the project develops.
+---
 
-## 🛠️ Technologies Used
+## 🔄 How the DevOps Lifecycle is Implemented
 
-- **Python** — application development.
-- **Git** — version control.
-- **GitHub** — remote repository and collaboration workflow.
-- **JSON** — initial data storage.
-- **pytest** — automated testing.
-- **GitHub Actions** — continuous integration and automated test execution.
+TrackHub follows a complete, industry-standard DevOps lifecycle from writing code to testing and merging:
+
+```text
+ 1. PLAN & CODE         2. PRE-COMMIT CHECK       3. AUTOMATED CI (CLOUD)      4. CODE REVIEW & MERGE
+┌────────────────┐      ┌──────────────────┐      ┌──────────────────────┐     ┌─────────────────────┐
+│ Feature Branch │ ───▶ │ Pre-Commit Hooks │ ───▶ │ GitHub Actions CI    │ ──▶ │ Pull Request (PR)   │
+│ & Commit Msg   │      │ (Syntax, .db,    │      │ (Ruff Linting +      │     │ Review and Merge    │
+│ Template       │      │  Pytest Gate)    │      │  Pytest Suite)       │     │ into 'main'         │
+└────────────────┘      └──────────────────┘      └──────────────────────┘     └─────────────────────┘
+```
+
+### 1. Feature-Branch Workflow
+- Nobody commits directly to the `main` branch.
+- Every new feature, bug fix, or improvement is created in its own short-lived branch:
+  - Features: `feature/<tracker-name>` (e.g., `feature/calorie-tracker`)
+  - Fixes: `fix/<issue-name>` (e.g., `fix/ci-lint-and-test-workflows`)
+  - Chores: `chore/<task-name>` (e.g., `chore/devops-standards`)
+
+### 2. Standardized Commit Messages (`.gitmessage`)
+To keep Git history clean, readable, and easy to audit, commits follow the **Conventional Commits** standard using a predefined template (`.gitmessage`):
+- `feat(...)`: Adding a new feature or endpoint.
+- `fix(...)`: Fixing a bug or broken test.
+- `test(...)`: Adding or updating test cases.
+- `ci(...)`: Updating workflow files or CI pipelines.
+- `refactor(...)`: Restructuring code without changing behavior.
+- `chore(...)`: Routine housekeeping or dependency updates.
+
+### 3. Git Pre-Commit Hooks (`.githooks/` & `.pre-commit-config.yaml`)
+Before a commit can even be created on your local computer, automated pre-commit checks run to protect the repository:
+- **Blocks database leaks**: Automatically stops SQLite database files (`*.db`) from being accidentally committed.
+- **Checks Python syntax**: Runs `py_compile` to catch syntax errors immediately.
+- **Runs local tests**: Automatically runs `pytest` so you never commit broken code.
+
+### 4. Continuous Integration (CI) with GitHub Actions (`.github/workflows/`)
+Every time code is pushed or a Pull Request is opened, GitHub Actions automatically runs automated jobs in the cloud on an Ubuntu server:
+- **Linting Pipeline (`lint.yml`)**: Uses **Ruff** to check Python code formatting, sort imports, and detect unused variables.
+- **Testing Pipeline (`test.yml`)**: Sets up Python, installs dependencies, and runs the entire **Pytest** test suite to ensure all unit tests pass before anything can be merged into `main`.
+- **Manual Trigger Support**: Both workflows support `workflow_dispatch`, meaning you can also trigger them manually with a click in the GitHub Actions tab.
+
+### 5. Pull Requests & Zero-Downtime Merging
+Changes are reviewed through GitHub Pull Requests. Once the CI pipeline confirms that all tests and lint checks have green checkmarks, the branch is safely merged into `main`.
+
+---
+
+## 🛠️ Architecture & Technologies
+
+TrackHub uses a clean **API Gateway** pattern:
+
+- **Unified API Gateway (`app.py`)**: A single Flask server running on port `5001`. It dynamically connects all four tracker apps, serves the frontend pages, handles CORS (cross-origin sharing), and protects against path traversal security risks.
+- **Decoupled SQLite Databases**: Each tracker has its own SQLite database (`calorie.db`, `expenses.db`, `habit.db`, `study.db`). This means each tracker is completely independent and simultaneous writes never block each other.
+- **Zero-Dependency Frontend**: The user interface is built with plain HTML5, CSS3 (modern glassmorphism), and vanilla JavaScript. There is no heavy framework (no Node.js or React build step needed), making the app fast and lightweight.
+
+---
 
 ## 📂 Project Structure
 
 ```text
-tracker-hub/
-├── trackers/
-│   ├── __init__.py
-│   ├── calorie/
-│   │   └── __init__.py
-│   └── expense/
-│       └── __init__.py
-├── tests/
-├── .gitignore
-└── README.md
+TrackHub/
+├── index.html                       # Main dashboard landing page
+├── tracker.css                      # Unified glassmorphic styling
+├── title-animation.js               # Multilingual animated header
+├── app.py                           # Unified Flask API gateway & asset server
+├── requirements.txt                 # Project dependencies (Flask, pytest, ruff)
+├── pytest.ini                       # Pytest configuration file
+├── .gitignore                       # Ignored files (databases, virtualenv, caches)
+├── .gitmessage                      # Standard commit message template
+├── .pre-commit-config.yaml          # Pre-commit hook configuration
+├── .githooks/                       # Local Git pre-commit script
+│   └── pre-commit
+├── .github/                         # Cloud CI pipelines
+│   └── workflows/
+│       ├── lint.yml                 # Ruff linting workflow
+│       └── test.yml                 # Pytest automated testing workflow
+├── tests/                           # Automated test suites
+│   ├── test_calorie.py              # Calorie API & nutrition math tests
+│   ├── test_expense.py              # Expense & bill splitting tests
+│   ├── test_habit.py                # Habit streak & completion tests
+│   ├── test_study.py                # Study focus & task tests
+│   └── test_unified_app.py          # Gateway routing & asset tests
+└── trackers/                        # Micro-service tracker directories
+    ├── calorie/
+    │   ├── app.py                   # Calorie backend API
+    │   ├── calorie.html             # Calorie frontend page
+    │   ├── calorie.js               # Calorie frontend logic
+    │   └── data/foods.csv           # Indian food nutrition dataset
+    ├── expense/
+    │   ├── app.py                   # Expense backend API
+    │   ├── expense.html             # Expense frontend page
+    │   └── expense.js               # Expense frontend logic
+    ├── habit/
+    │   ├── app.py                   # Habit backend API
+    │   ├── habit.html               # Habit frontend page
+    │   └── habit.js                 # Habit frontend logic
+    └── study/
+        ├── app.py                   # Study backend API
+        ├── study.html               # Study frontend page
+        └── study.js                 # Study frontend logic
 ```
 
-The structure will expand as features, tests, and additional trackers are implemented.
+---
+
+## 📦 Dependencies
+
+All dependencies are listed in `requirements.txt`:
+- **Flask**: Lightweight web framework used for the API Gateway and backend services.
+- **pytest**: Automated testing framework used to test all APIs and route logic.
+- **ruff**: Ultra-fast Python linter used to check code quality and formatting.
+- **SQLite3**: Lightweight file-based relational database (built into Python standard library, zero setup needed).
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-
-- Python 3 installed.
+- Python 3.9 or newer installed.
 - Git installed.
-- A GitHub account.
 
-### Clone the Repository
-
+### 1. Clone the Repository
 ```bash
-git clone <your-github-repository-url>
-cd tracker-hub
+git clone https://github.com/V-Humble-28/TrackHub.git
+cd TrackHub
 ```
 
-Replace `<your-github-repository-url>` with your actual GitHub repository URL.
-
-### Run the Project
-
-The application and its run instructions will be added as the tracker modules become functional.
-
-## 🌿 Git Workflow & DevOps Standards
-
-The project follows a strict **Feature-Branch Workflow** and **Atomic Commit Cadence** (see [CONTRIBUTING.md](CONTRIBUTING.md) for full engineering guidelines):
-
-### 1. Branch Naming Taxonomy
-* **Features**: `feature/<tracker-name>` (e.g. `feature/expense-tracker`)
-* **Bug Fixes**: `fix/<tracker-or-bug>` (e.g. `fix/split-rounding`)
-* **DevOps / CI**: `ci/<task>` (e.g. `ci/github-actions-tests`)
-* **Documentation**: `docs/<description>`
-
-### 2. Atomic Commit Cadence (4-Step Rule)
-Each module is committed in small, reviewable increments following Conventional Commits:
-1. `feat(<module>): add database schema and SQLite models`
-2. `feat(<module>): implement core business logic and API endpoints`
-3. `test(<module>): add automated unit and edge-case tests`
-4. `feat(ui): connect frontend interface and styles`
-
-Example:
-
+### 2. Set Up Virtual Environment
 ```bash
-git switch -c feature/expense-tracker
-# Step 1: Implement schema & endpoints
-git add trackers/expense/app.py
-git commit -m "feat(expense): add persistent split bill and default payer endpoints"
+# Create virtual environment
+python3 -m venv .venv
 
-# Step 2: Add test suite
-git add tests/test_expense.py
-git commit -m "test(expense): add automated test suite for expenses and bill splits"
-
-# Step 3: Implement UI integration
-git add expense.html expense.js tracker.css
-git commit -m "feat(ui): add persistent expense tracking and bill splitting interface"
+# Activate it
+# On macOS/Linux:
+source .venv/bin/activate
+# On Windows:
+# .venv\Scripts\activate
 ```
 
-## 🧪 Testing
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-Automated tests will be added to verify that tracker features work correctly. GitHub Actions will later be configured to run the tests automatically when changes are pushed.
+### 4. Enable Local Git Pre-Commit Hooks (Optional but Recommended)
+```bash
+git config core.hooksPath .githooks
+```
 
-## 🎯 Project Objectives
-
-- Build 10 useful tracker modules using Python.
-- Practise writing readable and maintainable code.
-- Learn Git branching, commits, pushing, and merging.
-- Maintain a meaningful commit history with at least 15 commits.
-- Learn automated testing and CI/CD fundamentals.
-- Demonstrate practical DevOps concepts during the viva.
-
-## 📚 Learning Outcomes
-
-This project provides practical experience with Python fundamentals, file handling, modular programming, version control, testing, and continuous integration.
-
-## 👨‍💻 Project Status
-
-**In Development** — The project is being built incrementally, starting with the Calorie Tracker and Expense Tracker.
+### 5. Run the Application
+```bash
+python app.py
+```
+Open your browser and navigate to:
+👉 **`http://127.0.0.1:5001`**
 
 ---
 
+## 🧪 Running Automated Tests
 
+To run the automated test suite locally:
+
+```bash
+pytest
+```
+
+To run tests with detailed output:
+```bash
+pytest -v
+```
+
+All tests execute in less than a second, verifying that all backend APIs, calculations, and gateway routes are working properly.
